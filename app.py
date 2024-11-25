@@ -43,9 +43,9 @@ def predict():
         # Call the prediction pipeline to predict math_score
         prediction_pipeline = PredictionPipeline()
         prediction = prediction_pipeline.predict(data)
-
-        # Return the prediction result to the user
-        return render_template('index.html', prediction_text=f'Predicted Math Score: {prediction}')
+        
+        # Render the prediction result
+        return render_template('index.html', predicted_score=prediction)
 
     except Exception as e:
         raise CustomException(e, sys)
