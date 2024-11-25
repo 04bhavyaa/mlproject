@@ -1,8 +1,0 @@
-[core]
-    remote = origin
-
-[remote "origin"]
-    url = https://dagshub.com/04bhavyaa/mlproject.git
-    auth = basic
-    user = 04bhavyaa
-    password = 23975d736e8c30b9e647c80fe660ca3249c8d28c
