@@ -3,7 +3,10 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.dvc/
+# Ignore everything in .dvc except the config file
+.dvc/*
+!.dvc/config
+
 .git/
 .github/
 .dvc/

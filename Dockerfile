@@ -5,7 +5,7 @@ FROM python:3.8-slim
 WORKDIR /app
 
 # Copy only the requirements file to leverage Docker cache
-COPY requirements.txt requirements.txt
+COPY . .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
