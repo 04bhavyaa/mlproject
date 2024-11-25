@@ -11,4 +11,5 @@ pymysql
 scikit-learn
 xgboost
 mlflow
+dagshub
 #-e .

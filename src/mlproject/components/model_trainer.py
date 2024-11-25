@@ -22,6 +22,11 @@ from src.mlproject.exception import CustomException
 from src.mlproject.logger import logging
 from src.mlproject.utils import save_object, evaluate_model
 
+import dagshub
+dagshub.init(repo_owner='04bhavyaa', repo_name='mlproject', mlflow=True)
+
+import mlflow
+
 @dataclass
 class ModelTrainerConfig:
     trained_model_file_path = os.path.join("artifacts", "model.pkl")
@@ -30,6 +35,12 @@ class ModelTrainer:
     def __init__(self):
         self.model_trainer_config = ModelTrainerConfig()    
 
+    def eval_metrics(self,actual, pred):
+        rmse = np.sqrt(mean_squared_error(actual, pred))
+        mae = mean_absolute_error(actual, pred)
+        r2 = r2_score(actual, pred)
+        return rmse, mae, r2
+    
     def initiate_model_trainer(self, train_array, test_array):
         try:
             logging.info("Split the data into train and test arrays")
@@ -87,6 +98,37 @@ class ModelTrainer:
             ]
             best_model = models[best_model_name]
 
+            model_names = list(params.keys())
+            actual_model = ""
+
+            for model in model_names:
+                if best_model_name == model:
+                    actual_model = actual_model + model
+
+            best_params = params[actual_model]
+            mlflow.set_registry_uri("https://dagshub.com/04bhavyaa/mlproject.mlflow")
+            tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
+
+            # MLFlow
+            with mlflow.start_run():
+                predicted_qualities = best_model.predict(X_test)
+                (rmse, mae, r2) = self.eval_metrics(y_test, predicted_qualities)
+                mlflow.log_params(best_params)
+                mlflow.log_metrics({"rmse": rmse, "mae": mae, "r2": r2})
+
+                # Model registry does not work with file store
+                if tracking_url_type_store != "file":
+
+                    # Register the model
+                    # There are other ways to use the Model Registry, which depends on the use case
+                    # Please refer to the MLflow documentation for more information:
+                    # https://www.mlflow.org/docs/latest/model-registry.html#api-workflow
+                    mlflow.sklearn.log_model(best_model, "model", registered_model_name="best_model")
+                else:
+                    mlflow.sklearn.log_model(best_model, "model")
+
+
+
             if best_model_score < 0.6:
                 raise CustomException("No best model found")
             
@@ -104,13 +146,7 @@ class ModelTrainer:
             r2 = r2_score(y_test, predicted)
 
             # Return the model and metrics
-            return {
-                "best_model": best_model,
-                "model_name": best_model_name,
-                "mae": mae,
-                "mse": mse,
-                "r2": r2
-            }
+            print(f'"best_model": {best_model}, "model_name": {best_model_name}, "mae": {mae}, "mse": {mse}, "r2": {r2}')
 
         except CustomException as e:
             raise CustomException(e, sys)
