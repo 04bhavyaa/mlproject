@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import r2_score
 import pymysql
-
 import pickle
 import numpy as np
 
@@ -21,19 +20,19 @@ database=os.getenv('db')
 def read_sql_data():
     logging.info("Reading from MySQL database started")
     try:
-        mydb=pymysql.connect(
+        mydb = pymysql.connect(
             host=host,
             user=user,
             password=password,
             db=database)
         logging.info("Connection established", mydb)
-        df= pd.read_sql("SELECT * FROM students", con=mydb)
+        df = pd.read_sql("SELECT * FROM students", con=mydb)
         print(df.head())
 
         return df
     
     except Exception as e:
-        raise CustomException(e,sys)
+        raise CustomException(e, sys)
 
 def save_object(file_path, obj):
     try:
@@ -46,7 +45,15 @@ def save_object(file_path, obj):
 
     except Exception as e:
         raise CustomException(e, sys)
-    
+
+def load_object(file_path):
+    try:
+        with open(file_path, "rb") as file_obj:
+            return pickle.load(file_obj)
+
+    except Exception as e:
+        raise CustomException(e, sys)
+
 def evaluate_model(X_train, y_train, X_test, y_test, models, param):
     try: 
         report = {}
