@@ -1,0 +1,14 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.dvc/
+.git/
+.github/
+.dvc/
+logs/
+artifacts/
+catboost_info/
+.env
+.gitignore
