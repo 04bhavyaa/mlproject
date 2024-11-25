@@ -12,4 +12,5 @@ scikit-learn
 xgboost
 mlflow
 dagshub
+gunicorn
 #-e .
