@@ -69,7 +69,12 @@ jobs:
       - name: List Docker Images
         run: docker images
 
+      # Step: Tag Docker Image with the Correct Repository Name
+      - name: Tag Docker Image
+        run: |
+          docker tag flask-app:latest ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO_NAME }}:latest
+
+      # Step: Push Docker Image to Docker Hub
       - name: Push Docker Image
         run: |
-          docker tag flask-app:latest ${{ secrets.DOCKER_REPO_NAME }}:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO_NAME }}:latest
