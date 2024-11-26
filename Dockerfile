@@ -16,8 +16,5 @@ COPY .dvc/config /root/.dvc/config
 # Copy the .dvc cache directory for data versioning
 COPY .dvc/cache /root/.dvc/cache
 
-# Pull the data using DVC
-RUN dvc pull
-
 # Run the application
 CMD ["python", "app.py"]
