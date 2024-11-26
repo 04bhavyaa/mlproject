@@ -36,8 +36,11 @@ The objective of this project is to build a machine learning model to predict st
 - Libraries: NumPy, Pandas, Scikit-learn, XGBoost, CatBoost, Matplotlib, Seaborn, and more.
 
 ## Project Gallery
+![Screenshot 2024-11-26 180146](https://github.com/user-attachments/assets/1602546c-cbef-4d66-9119-a43ead9b358e)
+![Screenshot 2024-11-26 180632](https://github.com/user-attachments/assets/07e5b33f-00a7-48fe-bfb6-ce7b9850e743)
 ![image](https://github.com/user-attachments/assets/731edf55-cf99-42fd-a9a6-8ceb98d00623)
 ![image](https://github.com/user-attachments/assets/05a1aebf-0c56-4014-b993-f0084d005311)
+![Screenshot 2024-11-26 175513](https://github.com/user-attachments/assets/0e114d4e-ef2c-417c-b3bb-c98062be5107)
 
 ## Setup Instructions
 
