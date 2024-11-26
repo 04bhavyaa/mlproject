@@ -18,7 +18,7 @@ This project aims to predict student math scores based on demographic and educat
 
 The objective of this project is to build a machine learning model to predict students' math scores based on features such as gender, race, parental education level, lunch type, and test preparation course status. The project includes:
 - A Flask-based web application for real-time predictions.
-- A machine learning pipeline using **CatBoost** and **GridSearchCV** for hyperparameter optimization.
+- Machine learning pipeline and components using various models such as **CatBoost**, **XGBoost**, and **Random Forest** used for predictions and **GridSearchCV** for hyperparameter optimization.
 - Data and model versioning with **DVC** and **Dagshub**.
 
 ## Technologies Used
