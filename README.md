@@ -94,12 +94,14 @@ This will start the Flask app inside a Docker container, and the application wil
 ### Model Training
 The machine learning model is trained using various models with hyperparameter tuning performed via GridSearchCV. To train the model, follow these steps:
 
-1. **Train the model by running the model training component:**
+1. **Train the model by running component.py:**
    ```bash
-    python src/mlproject/component/model_training.py
-2. **Evaluate the model using performance metrics (e.g., accuracy, MSE, etc.).**
+    python components.py
+2. **Evaluate the model using performance metrics (e.g., accuracy, MSE, etc.)**
+3. **To edit the component you can go to src/mlproject/components/model_trainer.py**
 
 After training, the model.pkl will be saved in the artifacts/folder, and it will be used for predictions in the Flask app.
+Best Model as of now: Lasso regression with the highest Test R2 score of 0.8812.
 
 ### Ongoing Enhancements
 - Improve the accuracy of the model by exploring other algorithms and feature engineering techniques.
