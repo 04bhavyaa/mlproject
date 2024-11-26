@@ -1,6 +1,7 @@
 # Student Performance Prediction Project
 
 This project aims to predict student math scores based on demographic and educational features using machine learning models. The application is built using Flask and deployed in Docker containers. The project leverages DVC (Data Version Control) for managing datasets and models, and uses CatBoost for model training and prediction.
+MLFlow Tracking URI: https://dagshub.com/04bhavyaa/mlproject.mlflow/
 
 ## Table of Contents
 
