@@ -11,7 +11,7 @@ COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the .dvc config file for authentication
-COPY .dvc/config.local /root/.dvc/config.local
+COPY .dvc/config /root/.dvc/config
 
 # Run the application
 CMD ["python", "app.py"]
