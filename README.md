@@ -1,7 +1,8 @@
 # Student Performance Prediction Project
 
-This project aims to predict student math scores based on demographic and educational features using machine learning models. The application is built using Flask and deployed in Docker containers. The project leverages DVC (Data Version Control) for managing datasets and models, and uses CatBoost for model training and prediction.
-MLFlow Tracking URI: https://dagshub.com/04bhavyaa/mlproject.mlflow/
+This project aims to predict student math scores based on demographic and educational features using machine learning models. The application is built using Flask and deployed in Docker containers. The project leverages DVC (Data Version Control) for managing datasets and models, and uses various models for training and eventually prediction.
+Best Model as of now: Lasso regression with the highest Test R2 score of 0.8812.
+- MLFlow Tracking URI: https://dagshub.com/04bhavyaa/mlproject.mlflow/
 
 ## Table of Contents
 
@@ -105,7 +106,6 @@ The machine learning model is trained using various models with hyperparameter t
 3. **To edit the component you can go to src/mlproject/components/model_trainer.py**
 
 After training, the model.pkl will be saved in the artifacts/folder, and it will be used for predictions in the Flask app.
-Best Model as of now: Lasso regression with the highest Test R2 score of 0.8812.
 
 ### Ongoing Enhancements
 - Improve the accuracy of the model by exploring other algorithms and feature engineering techniques.
