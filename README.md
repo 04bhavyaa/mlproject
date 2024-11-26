@@ -6,6 +6,7 @@ This project aims to predict student math scores based on demographic and educat
 
 - [Project Overview](#project-overview)
 - [Technologies Used](#technologies-used)
+- [Project Gallery](#project-galley)
 - [Setup Instructions](#setup-instructions)
 - [Running the Application](#running-the-application)
 - [Docker Setup](#docker-setup)
@@ -29,6 +30,11 @@ The objective of this project is to build a machine learning model to predict st
 - **CatBoost**: A gradient boosting library used for model training.
 - **Docker**: For containerizing the application to ensure consistency across environments.
 - **GridSearchCV**: For hyperparameter tuning of the CatBoost model.
+
+## Project Gallery
+![image](https://github.com/user-attachments/assets/8abd8505-1f58-482c-bbc6-60447298cd33)
+![image](https://github.com/user-attachments/assets/35dece29-b1eb-4397-ae88-4e0c95a33086)
+
 
 ## Setup Instructions
 
@@ -98,6 +104,6 @@ After training, the model.pkl will be saved in the artifacts/folder, and it will
 - Add additional prediction models and compare their performance.
 - Enhance the user interface of the web app to include more interactive visualizations.
 - Expand the dataset and improve generalization.
-- 
+
 ### Contributors
 Bhavya Jha (Developer)
