@@ -6,17 +6,11 @@ import mlflow
 import mlflow.sklearn
 import numpy as np
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.model_selection import GridSearchCV
 from catboost import CatBoostRegressor
-from sklearn.ensemble import (
-    AdaBoostRegressor,
-    GradientBoostingRegressor,
-    RandomForestRegressor,
-)
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.tree import DecisionTreeRegressor
 from xgboost import XGBRegressor
-
 from src.mlproject.exception import CustomException
 from src.mlproject.logger import logging
 from src.mlproject.utils import save_object, evaluate_model
@@ -30,7 +24,7 @@ class ModelTrainerConfig:
 
 class ModelTrainer:
     def __init__(self):
-        self.model_trainer_config = ModelTrainerConfig()    
+        self.model_trainer_config = ModelTrainerConfig()
 
     def eval_metrics(self, actual, pred):
         rmse = np.sqrt(mean_squared_error(actual, pred))
@@ -49,17 +43,15 @@ class ModelTrainer:
             ]
             
             models = {
-                "Random Forest": RandomForestRegressor(),
-                "Decision Tree": DecisionTreeRegressor(),
-                "Gradient Boosting": GradientBoostingRegressor(),
                 "Linear Regression": LinearRegression(),
                 "Ridge Regression": Ridge(),
                 "Lasso Regression": Lasso(),
+                "Random Forest": RandomForestRegressor(),
                 "XGBRegressor": XGBRegressor(),
-                "CatBoosting Regressor": CatBoostRegressor(verbose=False),
-                "AdaBoost Regressor": AdaBoostRegressor(),
             }
-            params = {
+            
+            # Hyperparameter grids for GridSearchCV
+            param_grids = {
                 "Linear Regression": {
                     'fit_intercept': [True, False],
                     'positive': [True, False]
@@ -75,18 +67,6 @@ class ModelTrainer:
                     'positive': [True, False],
                     'selection': ['cyclic', 'random']
                 },
-                "ElasticNet": {
-                    'alpha': [0.1, 1.0, 10.0],
-                    'l1_ratio': [0.1, 0.5, 0.9],
-                    'fit_intercept': [True, False]
-                },
-                "Decision Tree": {
-                    'criterion': ['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
-                    'splitter': ['best', 'random'],
-                    'max_depth': [None, 10, 20, 30],
-                    'min_samples_split': [2, 5, 10],
-                    'min_samples_leaf': [1, 2, 4]
-                },
                 "Random Forest": {
                     'n_estimators': [50, 100, 200],
                     'criterion': ['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
@@ -94,87 +74,79 @@ class ModelTrainer:
                     'min_samples_split': [2, 5, 10],
                     'min_samples_leaf': [1, 2, 4]
                 },
-                "Gradient Boosting": {
-                    'learning_rate': [0.01, 0.05, 0.1],
-                    'n_estimators': [50, 100, 200],
-                    'subsample': [0.6, 0.75, 0.9],
-                    'max_depth': [3, 5, 7]
-                },
                 "XGBRegressor": {
                     'learning_rate': [0.01, 0.05, 0.1],
                     'n_estimators': [50, 100, 200],
                     'max_depth': [3, 5, 7],
                     'reg_alpha': [0, 1, 10],
                     'reg_lambda': [0, 1, 10]
-                },
-                "CatBoosting Regressor": {
-                    'depth': [6, 8, 10],
-                    'learning_rate': [0.01, 0.05, 0.1],
-                    'iterations': [50, 100, 200],
-                    'l2_leaf_reg': [1, 3, 5]
-                },
-                "AdaBoost Regressor": {
-                    'learning_rate': [0.01, 0.05, 0.1],
-                    'n_estimators': [50, 100, 200],
-                    'loss': ['linear', 'square', 'exponential']
                 }
             }
 
-            model_report = evaluate_model(X_train, y_train, X_test, y_test, models, params)
-            
-            # To get the best model score from dictionary
-            best_model_score = max(sorted(model_report.values()))
+            best_model_score = -float('inf')
+            best_model = None
+            best_params = None
 
-            # To get the best model name from dictionary
-            best_model_name = list(model_report.keys())[
-                list(model_report.values()).index(best_model_score)
-            ]
-            best_model = models[best_model_name]
-
-            model_names = list(params.keys())
-            actual_model = ""
-
-            for model in model_names:
-                if best_model_name == model:
-                    actual_model = actual_model + model
-
-            best_params = params[actual_model]
+            # MLflow logging setup
             mlflow.set_registry_uri("https://dagshub.com/04bhavyaa/mlproject.mlflow")
             tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
 
-            # MLFlow
+            # Use GridSearchCV for hyperparameter tuning
             with mlflow.start_run():
-                predicted_qualities = best_model.predict(X_test)
-                (rmse, mae, r2) = self.eval_metrics(y_test, predicted_qualities)
-                mlflow.log_params(best_params)
-                mlflow.log_metrics({"rmse": rmse, "mae": mae, "r2": r2})
+                for model_name, model in models.items():
+                    logging.info(f"Training {model_name}")
 
-                # Model registry does not work with file store
-                if tracking_url_type_store != "file":
+                    # Perform GridSearchCV to find the best hyperparameters
+                    grid_search = GridSearchCV(estimator=model, param_grid=param_grids[model_name], cv=3, n_jobs=-1, scoring='neg_mean_squared_error')
+                    grid_search.fit(X_train, y_train)
 
-                    # Register the model
-                    mlflow.sklearn.log_model(best_model, "model", registered_model_name="best_model")
-                else:
-                    mlflow.sklearn.log_model(best_model, "model")
+                    # Get the best model and parameters
+                    best_params_for_model = grid_search.best_params_
+                    best_model_for_model = grid_search.best_estimator_
 
-            if best_model_score < 0.6:
+                    # Evaluate the model
+                    predicted_qualities = best_model_for_model.predict(X_test)
+                    rmse, mae, r2 = self.eval_metrics(y_test, predicted_qualities)
+
+                    # Check and log parameters
+                    try:
+                        mlflow.log_params(best_params_for_model)
+                    except Exception as e:
+                        logging.error(f"Error logging params: {e}")
+                    
+                    mlflow.log_metrics({"rmse": rmse, "mae": mae, "r2": r2})
+                    mlflow.sklearn.log_model(model, model_name)
+
+                    # Check if this model is the best performing one
+                    if rmse < best_model_score or best_model_score == -float('inf'):
+                        best_model_score = rmse
+                        best_model = best_model_for_model
+                        best_params = best_params_for_model
+
+                    # Register the model in MLFlow Model Registry
+                    if tracking_url_type_store != "file":
+                        mlflow.sklearn.log_model(best_model_for_model, model_name, registered_model_name=model_name, input_example=X_test[:5])  # Providing input example
+                    else:
+                        mlflow.sklearn.log_model(best_model_for_model, model_name)
+
+            if best_model_score == -float('inf'):
                 raise CustomException("No best model found")
             
-            logging.info(f"Best model: {best_model_name} with score: {best_model_score}")
-
+            logging.info(f"Best model: {best_model} with RMSE: {best_model_score}")
+            
+            # Save the best model
             save_object(
                 file_path=self.model_trainer_config.trained_model_file_path,
                 obj=best_model
             )
 
+            # Return final metrics and best model
             predicted = best_model.predict(X_test)
-
             mae = mean_absolute_error(y_test, predicted)
             mse = mean_squared_error(y_test, predicted)
             r2 = r2_score(y_test, predicted)
 
-            # Return the model and metrics
-            print(f'"best_model": {best_model}, "model_name": {best_model_name}, "mae": {mae}, "mse": {mse}, "r2": {r2}')
+            print(f'"best_model": {best_model}, "mae": {mae}, "mse": {mse}, "r2": {r2}')
 
         except CustomException as e:
             raise CustomException(e, sys)
