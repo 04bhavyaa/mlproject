@@ -55,4 +55,4 @@ jobs:
       - name: Push Docker Image
         run: |
           docker tag flask-app:latest ${{ secrets.DOCKER_REPO_NAME }}:latest
-          docker push ${{ secrets.DOCKER_REPO_NAME }}:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO_NAME }}:latest
