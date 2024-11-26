@@ -29,6 +29,7 @@ jobs:
       # Step 4: DVC Pull
       - name: DVC Pull
         run: |
+          dvc remote remove origin
           dvc remote add origin s3://dvc
           dvc remote modify origin endpointurl https://dagshub.com/04bhavyaa/mlproject.s3
           dvc remote modify origin --local access_key_id ${{ secrets.DAGSHUB_ACCESS_KEY_ID }}
