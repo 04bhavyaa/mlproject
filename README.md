@@ -22,14 +22,17 @@ The objective of this project is to build a machine learning model to predict st
 - Data and model versioning with **DVC** and **Dagshub**.
 
 ## Technologies Used
-
-- **Flask**: For creating the web-based user interface to input data and display predictions.
-- **DVC (Data Version Control)**: For managing the data and model versions.
-- **Dagshub**: A platform for versioning large datasets and models.
-- **Python 3.8+**: The programming language used to implement the machine learning models.
-- **CatBoost**: A gradient boosting library used for model training.
-- **Docker**: For containerizing the application to ensure consistency across environments.
-- **GridSearchCV**: For hyperparameter tuning of the CatBoost model.
+- Flask: Built a user-friendly web interface for inputting data and displaying predictions.
+- DVC: For managing data and model versioning efficiently.
+- Dagshub: To version large datasets and track experiments.
+- GitHub Actions: Automated workflows for CI/CD using YAML configurations.
+- Python 3.8+: The backbone of the entire project.
+- Git: Version-controlled the code and collaborated efficiently.
+- VSCode: My go-to code editor for writing, testing, and debugging the project.
+- Docker: For containerizing the app and ensuring consistency across environments.
+- ML Models: Linear Regression, Ridge, Lasso, ElasticNet, Decision Tree, Random Forest, Gradient Boosting, XGBoost, CatBoost, and AdaBoost.
+- GridSearchCV: To fine-tune the CatBoost model for optimal performance.
+- Libraries: NumPy, Pandas, Scikit-learn, XGBoost, CatBoost, Matplotlib, Seaborn, and more.
 
 ## Project Gallery
 ![image](https://github.com/user-attachments/assets/731edf55-cf99-42fd-a9a6-8ceb98d00623)
