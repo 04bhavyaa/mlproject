@@ -29,12 +29,11 @@ jobs:
       # Step 4: DVC Pull
       - name: DVC Pull
         run: |
-          pip install dvc
           dvc remote default origin
-          dvc remote add origin https://dagshub.com/04bhavyaa/mlproject.dvc
-          dvc remote modify origin --local auth basic
-          dvc remote modify origin --local user 04bhavyaa 
-          dvc remote modify origin --local password 5e25c943dc351ca2cb0e020fe10092c4fe4fbcf9
+          dvc remote add origin s3://dvc
+          dvc remote modify origin endpointurl https://dagshub.com/04bhavyaa/mlproject.s3
+          dvc remote modify origin --local access_key_id ${{ secrets.DAGSHUB_ACCESS_KEY_ID }}
+          dvc remote modify origin --local secret_access_key ${{ secrets.DAGSHUB_SECRET_ACCESS_KEY }}
           dvc pull
 
       # Step 4: Set up Docker
