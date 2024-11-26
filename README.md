@@ -32,9 +32,8 @@ The objective of this project is to build a machine learning model to predict st
 - **GridSearchCV**: For hyperparameter tuning of the CatBoost model.
 
 ## Project Gallery
-![image](https://github.com/user-attachments/assets/8abd8505-1f58-482c-bbc6-60447298cd33)
-![image](https://github.com/user-attachments/assets/35dece29-b1eb-4397-ae88-4e0c95a33086)
-
+![image](https://github.com/user-attachments/assets/731edf55-cf99-42fd-a9a6-8ceb98d00623)
+![image](https://github.com/user-attachments/assets/05a1aebf-0c56-4014-b993-f0084d005311)
 
 ## Setup Instructions
 
