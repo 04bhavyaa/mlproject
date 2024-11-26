@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: 3.8
 
-      # Step 3: Install Dependencies  
+      # Step 3: Install Dependencies
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
@@ -30,6 +30,7 @@ jobs:
       - name: DVC Pull
         run: |
           dvc remote remove origin
+          dvc remote default origin
           dvc remote add origin s3://dvc
           dvc remote modify origin endpointurl https://dagshub.com/04bhavyaa/mlproject.s3
           dvc remote modify origin --local access_key_id ${{ secrets.DAGSHUB_ACCESS_KEY_ID }}
