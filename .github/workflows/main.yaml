@@ -26,6 +26,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # Step 4: DVC Pull
+      - name: DVC Pull
+        run: |
+          pip install dvc
+          dvc remote default origin
+          dvc remote add origin https://dagshub.com/04bhavyaa/mlproject.dvc
+          dvc remote modify origin --local auth basic
+          dvc remote modify origin --local user 04bhavyaa 
+          dvc remote modify origin --local password 5e25c943dc351ca2cb0e020fe10092c4fe4fbcf9
+          dvc pull
+
       # Step 4: Set up Docker
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
